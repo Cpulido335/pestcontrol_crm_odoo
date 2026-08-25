@@ -1,0 +1,5 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_pest_control_service_record,access_pest_control_service_record,model_pest_control_service_record,base.group_user,1,1,1,1
+access_pest_control_address,access_pest_control_address,model_pest_control_address,base.group_user,1,1,1,1
+access_pest_control_invoice_user,pest.control.invoice.user,model_pest_control_invoice,base.group_user,1,1,1,0
+access_pest_control_invoice_admin,pest.control.invoice.admin,model_pest_control_invoice,base.group_system,1,1,1,1

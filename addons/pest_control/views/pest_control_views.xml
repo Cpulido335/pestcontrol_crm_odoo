@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- ============================================= -->
+
+  <!-- CUSTOM STANDALONE ADDRESS VIEWS & ACTION -->
+
+  <!-- ============================================= -->
+
+  <record id="view_pest_control_address_list" model="ir.ui.view">
+    <field name="name">pest.control.address.list</field>
+    <field name="model">pest.control.address</field>
+    <field name="arch" type="xml"><list string="Service Locations"><field name="display_name"/><field name="name"/><field name="street"/><field name="city"/><field name="state_id"/></list></field>
+  </record>
+
+  <record id="view_pest_control_address_form" model="ir.ui.view">
+    <field name="name">pest.control.address.form</field>
+    <field name="model">pest.control.address</field>
+    <field name="arch" type="xml">
+      <form string="Service Location">
+        <sheet>
+          <group>
+            <group string="Label">
+              <field name="name"/>
+            </group>
+            <group string="Address Details">
+              <field name="street"/>
+              <field name="street2"/>
+              <field name="city"/>
+              <field name="state_id"/>
+              <field name="zip"/>
+            </group>
+          </group>
+          <group string="Access &amp; Property Notes">
+            <field name="notes" placeholder="Gate codes, entry instructions, dog warnings, etc..."/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_pest_control_address" model="ir.actions.act_window">
+    <field name="name">Locations</field>
+    <field name="res_model">pest.control.address</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- SERVICE RECORD LIST VIEW -->
+
+  <!-- ========================= -->
+
+  <record id="view_pest_control_service_record_list" model="ir.ui.view">
+    <field name="name">pest.control.service.record.list</field>
+    <field name="model">pest.control.service.record</field>
+    <field name="arch" type="xml">
+      <list expand="1">
+        <field name="scheduled_datetime"/>
+        <field name="customer_id"/>
+        <button name="action_open_customer" type="object" string="Contact" class="oe_link"/>
+        <field name="service_address"/>
+        <field name="job_type"/>
+        <field name="bait_stations"/>
+        <field name="extra"/>
+        <field name="price"/>
+        <field name="tax"/>
+        <field name="total"/>
+        <field name="status" widget="badge" decoration-info="status == 'job_upcoming'" decoration-danger="status == 'not_sent'" decoration-warning="status == 'awaiting_payment'" decoration-success="status == 'paid'"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- SERVICE RECORD FORM VIEW -->
+
+  <!-- ========================= -->
+
+  <record id="view_pest_control_service_record_form" model="ir.ui.view">
+    <field name="name">pest.control.service.record.form</field>
+    <field name="model">pest.control.service.record</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_generate_invoice" type="object" string="Generate Invoice" class="btn-primary"/>
+          <button name="generate_advanced_invoice" type="object" string="Generate Advanced Invoice" class="btn-secondary"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="scheduled_datetime"/>
+            <field name="customer_id"/>
+            <!-- SERVICE ADDRESS WITH ON-THE-FLY CREATION -->
+            <field name="service_address" options="{'no_create_edit': False, 'no_quick_create': False}">
+              <form string="Create Service Location">
+                <sheet>
+                  <group>
+                    <group string="Label">
+                      <field name="name" placeholder="e.g. Main Office, Unit 4B, Warehouse"/>
+                    </group>
+                    <group string="Address Details">
+                      <field name="street" required="1"/>
+                      <field name="street2"/>
+                      <field name="city"/>
+                      <field name="state_id"/>
+                      <field name="zip"/>
+                    </group>
+                  </group>
+                  <group string="Access &amp; Property Notes">
+                    <field name="notes" placeholder="Gate codes, entry instructions, dog warnings, etc..."/>
+                  </group>
+                </sheet>
+              </form>
+            </field>
+            <field name="job_type"/>
+            <field name="bait_stations"/>
+            <field name="small_bait_stations_used"/>
+            <field name="large_bait_stations_used"/>
+            <field name="extra"/>
+            <field name="price"/>
+            <field name="tax"/>
+            <field name="total"/>
+            <field name="status" widget="selection_badge" decoration-danger="status == 'not_sent'" decoration-warning="status == 'awaiting_payment'" decoration-success="status == 'paid'"/>
+          </group>
+          <!-- CHEMICALS / PRODUCTS USED - FORM VIEW ONLY -->
+          <!-- CHEMICALS / PRODUCTS USED - FORM VIEW ONLY -->
+          <!-- One product per row, kept in the same order as the invoice. -->
+          <group string="Chemicals Used" col="1">
+            <table class="table table-sm table-borderless align-middle" style="width: 100%;">
+              <thead>
+                <tr><th style="width: 34%;">Product</th><th style="width: 12%; text-align: center;">Used</th><th style="width: 27%;">Amount</th><th style="width: 27%;">Rate</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>MASTERLINE</strong></td><td style="text-align: center;"><field name="masterline_used" nolabel="1"/></td><td><field name="masterline_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="masterline_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>CROSSFIRE</strong></td><td style="text-align: center;"><field name="crossfire_used" nolabel="1"/></td><td><field name="crossfire_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="crossfire_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>SUSPEND / SUSPEND POLY</strong></td><td style="text-align: center;"><field name="suspend_used" nolabel="1"/></td><td><field name="suspend_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="suspend_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>TEMPRID</strong></td><td style="text-align: center;"><field name="temprid_used" nolabel="1"/></td><td><field name="temprid_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="temprid_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>ZENPROX / ALPINE</strong></td><td style="text-align: center;"><field name="zenprox_alpine_used" nolabel="1"/></td><td><field name="zenprox_alpine_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="zenprox_alpine_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>TERMIDOR HE / SC</strong></td><td style="text-align: center;"><field name="termidor_he_sc_used" nolabel="1"/></td><td><field name="termidor_he_sc_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="termidor_he_sc_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>NYGUARD IGR</strong></td><td style="text-align: center;"><field name="nyguard_igr_used" nolabel="1"/></td><td><field name="nyguard_igr_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="nyguard_igr_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>DEMAND</strong></td><td style="text-align: center;"><field name="demand_used" nolabel="1"/></td><td><field name="demand_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="demand_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>SPECTRE PS</strong></td><td style="text-align: center;"><field name="spectre_ps_used" nolabel="1"/></td><td><field name="spectre_ps_gallons" nolabel="1" class="oe_inline"/><span>GAL</span></td><td><field name="spectre_ps_percent" nolabel="1" class="oe_inline"/><span>%</span></td></tr>
+                <tr><td><strong>GENTROL</strong></td><td style="text-align: center;"><field name="gentrol_used" nolabel="1"/></td><td><field name="gentrol_ml" nolabel="1" class="oe_inline"/><span>ML</span></td><td/></tr>
+                <tr><td><strong>ALPINE D</strong></td><td style="text-align: center;"><field name="alpine_d_used" nolabel="1"/></td><td><field name="alpine_d_amount" nolabel="1" class="oe_inline"/></td><td/></tr>
+                <tr><td><strong>RESOLVE</strong></td><td style="text-align: center;"><field name="resolve_used" nolabel="1"/></td><td><field name="resolve_oz" nolabel="1" class="oe_inline"/><span>Oz.</span></td><td/></tr>
+                <tr><td><strong>FASTRAC</strong></td><td style="text-align: center;"><field name="fastrac_used" nolabel="1"/></td><td><field name="fastrac_oz" nolabel="1" class="oe_inline"/><span>Oz.</span></td><td/></tr>
+                <tr><td><strong>APPREHEND</strong></td><td style="text-align: center;"><field name="apprehend_used" nolabel="1"/></td><td><field name="apprehend_oz" nolabel="1" class="oe_inline"/><span>Oz.</span></td><td/></tr>
+                <tr><td><strong>WEATHERBLOX</strong></td><td style="text-align: center;"><field name="weatherblox_used" nolabel="1"/></td><td><field name="weatherblox_oz" nolabel="1" class="oe_inline"/><span>Oz.</span></td><td/></tr>
+                <tr><td><strong>OPTIGUARD / QUANTUM</strong></td><td style="text-align: center;"><field name="optiguard_quantum_used" nolabel="1"/></td><td><field name="optiguard_quantum_oz" nolabel="1" class="oe_inline"/><span>Oz.</span></td><td/></tr>
+                <tr><td><strong>SPOT / CRACK &amp; CREVICE</strong></td><td/><td colspan="2"><field name="spot_crack_crevice" nolabel="1" placeholder="Enter spot / crack &amp; crevice details..." style="width: 100%;"/></td></tr>
+              </tbody>
+            </table>
+          </group>
+          <!-- INVOICE JOB / TREATMENT CHECKBOXES - FORM VIEW ONLY -->
+          <!-- Compact two-column checklist. Kept after Chemicals Used and before Notes. -->
+          <group string="Job / Treatment Checkboxes" col="1">
+            <table class="table table-sm table-borderless align-middle" style="width: 100%;">
+              <tbody>
+                <tr><td style="width: 34%;"><strong>Inside</strong></td><td style="width: 16%; text-align: center;"><field name="job_inside" nolabel="1"/></td><td style="width: 34%;"><strong>Outside</strong></td><td style="width: 16%; text-align: center;"><field name="job_outside" nolabel="1"/></td></tr>
+                <tr><td><strong>Wind</strong></td><td style="text-align: center;"><field name="job_wind" nolabel="1"/></td><td><strong>General Extermination</strong></td><td style="text-align: center;"><field name="job_general_extermination" nolabel="1"/></td></tr>
+                <tr><td><strong>Roaches</strong></td><td style="text-align: center;"><field name="job_roaches" nolabel="1"/></td><td><strong>Ants</strong></td><td style="text-align: center;"><field name="job_ants" nolabel="1"/></td></tr>
+                <tr><td><strong>Rats</strong></td><td style="text-align: center;"><field name="job_rats" nolabel="1"/></td><td><strong>Mice</strong></td><td style="text-align: center;"><field name="job_mice" nolabel="1"/></td></tr>
+                <tr><td><strong>Fleas</strong></td><td style="text-align: center;"><field name="job_fleas" nolabel="1"/></td><td><strong>Bats</strong></td><td style="text-align: center;"><field name="job_bats" nolabel="1"/></td></tr>
+                <tr><td><strong>Bed Bugs</strong></td><td style="text-align: center;"><field name="job_bed_bugs" nolabel="1"/></td><td><strong>Termite Inspections</strong></td><td style="text-align: center;"><field name="job_termite_inspections" nolabel="1"/></td></tr>
+                <tr><td><strong>Other</strong></td><td style="text-align: center;"><field name="job_other" nolabel="1"/></td><td/><td/></tr>
+              </tbody>
+            </table>
+          </group>
+          <group>
+            <field name="reccomendations" placeholder="Reccomendations for the customer that will show up on the invoice..."/>
+          </group>
+          <group>
+            <field name="notes" placeholder="Enter any notes about this service..."/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- SERVICE RECORD KANBAN VIEW -->
+
+  <!-- ========================= -->
+
+  <record id="view_pest_control_service_record_kanban" model="ir.ui.view">
+    <field name="name">pest.control.service.record.kanban</field>
+    <field name="model">pest.control.service.record</field>
+    <field name="arch" type="xml">
+      <kanban>
+        <field name="customer_id"/>
+        <field name="scheduled_datetime"/>
+        <field name="service_address"/>
+        <field name="job_type"/>
+        <field name="total"/>
+        <field name="status"/>
+        <templates>
+          <t t-name="card">
+            <div class="oe_kanban_global_click">
+              <strong><field name="customer_id"/></strong>
+              <div>
+                <field name="scheduled_datetime"/>
+              </div>
+              <div>
+                <field name="service_address"/>
+              </div>
+              <div>
+                <field name="job_type"/>
+              </div>
+              <div class="mt-2">
+                <strong>Total:</strong>
+                <field name="total"/>
+              </div>
+              <div class="mt-2">
+                <field name="status" widget="badge" decoration-danger="status == 'not_sent'" decoration-warning="status == 'awaiting_payment'" decoration-info="status == 'job_upcoming'" decoration-success="status == 'paid'"/>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- SERVICE RECORD CALENDAR -->
+
+  <!-- ========================= -->
+
+  <record id="service_record_calendar_view" model="ir.ui.view">
+    <field name="name">pest.control.service.record.calendar</field>
+    <field name="model">pest.control.service.record</field>
+    <field name="arch" type="xml"><calendar string="Service Calendar" date_start="scheduled_datetime" color="customer_id" mode="month"><field name="calendar_title"/><field name="service_address"/><field name="customer_id"/><field name="job_type"/><field name="status"/></calendar></field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- SERVICE RECORD SEARCH VIEW -->
+
+  <!-- ========================= -->
+
+  <record id="view_pest_control_service_record_search" model="ir.ui.view">
+    <field name="name">pest.control.service.record.search</field>
+    <field name="model">pest.control.service.record</field>
+    <field name="arch" type="xml"><search string="Search Service Records"><field name="customer_id" string="Customer"/></search></field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- ACTIONS & MENUS -->
+
+  <!-- ========================= -->
+
+  <record id="action_pest_control" model="ir.actions.act_window">
+    <field name="name">Service Records</field>
+    <field name="res_model">pest.control.service.record</field>
+    <field name="view_mode">list,kanban,form</field>
+    <field name="search_view_id" ref="view_pest_control_service_record_search"/>
+  </record>
+
+  <record id="action_pest_control_calendar" model="ir.actions.act_window">
+    <field name="name">Calendar</field>
+    <field name="res_model">pest.control.service.record</field>
+    <field name="view_mode">calendar</field>
+  </record>
+
+  <!-- Top App Menu Item -->
+
+  <menuitem id="menu_pest_control_root" name="Pest Control" web_icon="pest_control,static/description/ppc-512.png"/>
+
+  <!-- Sub-Menus -->
+
+  <menuitem id="menu_pest_control_service_records" name="Service Records" parent="menu_pest_control_root" action="action_pest_control" sequence="10"/>
+
+  <menuitem id="menu_pest_control_calendar" name="Calendar" parent="menu_pest_control_root" action="action_pest_control_calendar" sequence="20"/>
+
+  <!-- Sub-menu inside Pest Control pointing to standard Contacts -->
+
+  <menuitem id="menu_pest_control_contacts" name="Contacts" parent="menu_pest_control_root" action="contacts.action_contacts" sequence="40"/>
+
+  <menuitem id="menu_pest_control_locations" name="Locations" parent="menu_pest_control_root" action="action_pest_control_address" sequence="30"/>
+
+  <!-- ========================================================= PEST CONTROL INVOICES ========================================================= -->
+
+  <record id="view_pest_control_invoice_list" model="ir.ui.view">
+    <field name="name">pest.control.invoice.list</field>
+    <field name="model">pest.control.invoice</field>
+    <field name="arch" type="xml"><list string="Invoices" create="false"><field name="name"/><field name="customer_id"/><field name="invoice_date"/><field name="service_record_id"/><field name="amount"/><field name="tax"/><field name="total"/><field name="pdf_attachment_id"/></list></field>
+  </record>
+
+  <record id="view_pest_control_invoice_form" model="ir.ui.view">
+    <field name="name">pest.control.invoice.form</field>
+    <field name="model">pest.control.invoice</field>
+    <field name="arch" type="xml">
+      <form string="Invoice" create="false">
+        <sheet>
+          <group>
+            <group>
+              <field name="name"/>
+              <field name="customer_id"/>
+              <field name="invoice_date"/>
+              <field name="service_record_id"/>
+            </group>
+            <group>
+              <field name="amount"/>
+              <field name="tax"/>
+              <field name="total"/>
+              <field name="currency_id" invisible="1"/>
+            </group>
+          </group>
+          <group string="Generated PDF">
+            <field name="pdf_attachment_id" readonly="1"/>
+            <button name="action_view_pdf" type="object" string="View PDF" class="btn-primary" invisible="not pdf_attachment_id"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_pest_control_invoices" model="ir.actions.act_window">
+    <field name="name">Invoices</field>
+    <field name="res_model">pest.control.invoice</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_pest_control_invoices" name="Invoices" parent="menu_pest_control_root" action="action_pest_control_invoices" sequence="30"/>
+
+  <!-- add home action to use preferences -->
+
+  <record id="view_users_form_add_home_action" model="ir.ui.view">
+    <field name="name">res.users.form.add.home.action</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base.view_users_form"/>
+    <field name="arch" type="xml"><xpath expr="//page[@name='preferences']//group[@name='other_preferences']" position="inside"><field name="action_id" string="Home Action"/></xpath></field>
+  </record>
+
+  <!-- ========================= -->
+
+  <!-- PEST CONTROL FAVICON -->
+
+  <!-- ========================= -->
+
+  <template id="pest_control_favicon" inherit_id="web.layout">
+    <xpath expr="//link[@rel='shortcut icon']" position="replace">
+      <link rel="icon" type="image/svg+xml" href="/pest_control/static/description/ppc-512-whitecirbg.png"/>
+    </xpath>
+  </template>
+</odoo>

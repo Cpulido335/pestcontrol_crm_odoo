@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<odoo>
+    <!-- this is so that the invoice model can compute sales tax properly, sales tax is 7% in atlantic and im not chainging it -->
+    <record id="tax_7_percent" model="account.tax">
+        <field name="name">7% Sales Tax</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">7</field>
+    </record>
+
+</odoo>

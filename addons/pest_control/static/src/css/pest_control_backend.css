@@ -1,0 +1,42 @@
+/* Odoo top navigation bar */
+.o_main_navbar {
+    background-color: #000000 !important;
+    border-bottom-color: #000000 !important;
+}
+
+/* Navbar text, menu links, and icons */
+.o_main_navbar .o_menu_brand,
+.o_main_navbar .o_nav_entry,
+.o_main_navbar .dropdown-toggle,
+.o_main_navbar button {
+    color: #ffffff !important;
+}
+
+/* Keep navbar buttons transparent over the black background */
+.o_main_navbar .o_menu_brand,
+.o_main_navbar .o_nav_entry,
+.o_main_navbar button {
+    background-color: transparent !important;
+}
+
+/* Optional hover effect */
+.o_main_navbar .o_menu_brand:hover,
+.o_main_navbar .o_nav_entry:hover,
+.o_main_navbar button:hover {
+    background-color: #222222 !important;
+}
+
+/* Green "New" button - List + Kanban */
+.o_list_button_add.btn-primary,
+.o-kanban-button-new.btn-primary {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+/* Hover */
+.o_list_button_add.btn-primary:hover,
+.o-kanban-button-new.btn-primary:hover {
+    background-color: #157347 !important;
+    border-color: #146c43 !important;
+}

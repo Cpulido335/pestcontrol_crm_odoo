@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_pest_control_invoice" model="ir.sequence">
+        <field name="name">Pest Control Invoice</field>
+        <field name="code">pest.control.invoice</field>
+        <field name="prefix">INV-%(year)s-</field>
+        <field name="padding">4</field>
+    </record>
+
+</odoo>

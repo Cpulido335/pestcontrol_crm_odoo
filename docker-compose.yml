@@ -1,0 +1,86 @@
+services:
+
+  db:
+    image: postgres@sha256:5f72c7b5bd616308ccfd2e74d6be16fb06364e5eecbb815fe9dc6ab9761d2111
+
+    environment:
+      POSTGRES_DB: ${ODOO_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+
+
+  browserless:
+    image: ghcr.io/browserless/chromium@sha256:c0886239e4eaa102e214acbbde5345f5b2a55a7ccbb52456048afd374defbabb
+    restart: unless-stopped
+
+    environment:
+      TOKEN: pest-control-pdf
+      CONCURRENT: 2
+      QUEUED: 5
+      TIMEOUT: 60000
+      HOST: 0.0.0.0
+
+    expose:
+      - "3000"
+
+    shm_size: "2g"
+
+
+  odoo:
+    image: odoo@sha256:4f2c0806459de9df877f206d8f1886b673c1c452354d75d17366ffcad2208f68
+
+    depends_on:
+      - db
+      - browserless
+
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+
+    command:
+      [
+        "odoo",
+        "-d",
+        "${ODOO_DB}",
+        "-u",
+        "pest_control",
+        "--no-database-list",
+        "--proxy-mode"
+      ]
+
+    expose:
+      - "8069"
+
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+
+
+  caddy:
+    image: caddy@sha256:df7f1c2fb114453b951de51a98efc010db1655a92c2e86be6706714e2417a78d
+
+    environment:
+      DOMAIN: ${DOMAIN}
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+
+    depends_on:
+      - odoo
+
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
+  caddy-data:
+  caddy-config:

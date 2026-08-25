@@ -1,0 +1,1390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Browser-rendered Advanced Invoice.
+        This intentionally is NOT an ir.actions.report / PDF template.
+        The HTML/CSS structure is the original invoice layout; QWeb only inserts model data.
+    -->
+    <template id="report_advanced_invoice" name="Advanced Invoice HTML">
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                <title>Invoice-Professional-Pest-Control</title>
+                <style> 
+ 
+        /* ========================= 
+           PAGE 
+        ========================= */ 
+ 
+        @page { 
+            size: Legal; 
+            margin: 0; 
+        } 
+ 
+        * { 
+            box-sizing: border-box; 
+        } 
+ 
+        body { 
+            margin: 0; 
+            padding: 40px; 
+            background: #e5e7eb; 
+            font-family: Arial, sans-serif; 
+            font-weight: bold; 
+            color: #222; 
+        } 
+ 
+        /* ========================= 
+           INVOICE 
+        ========================= */ 
+ 
+        .invoice { 
+            width: 8.5in; 
+            height: 14in; 
+            margin: 0 auto; 
+            padding: 50px; 
+            background: white; 
+        } 
+ 
+        /* ========================= 
+           HEADER 
+        ========================= */ 
+ 
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 50px; 
+        } 
+        
+        /* ========================= 
+        2 ITEMS BELOW ARE DEPRECATED
+        ========================= */ 
+ 
+
+        .company { 
+            font-size: 24px; 
+            font-weight: bold; 
+        } 
+ 
+        .company-details { 
+            margin-top: 8px; 
+            font-size: 13px; 
+            line-height: 1.5; 
+            color: #666; 
+        } 
+
+         /* ========================= 
+           COMPANY LOGO
+        ========================= */ 
+ 
+
+        .company-logo {
+            width: 360px;
+            height: 110px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .company-logo img {
+            margin-top: -5px;
+            
+            /* Original PNG size: width 120%, height 120%, need this because switched svg and wasnt right size for some reason*/
+            width: 175%;
+            height: 175%;
+            object-fit: contain;
+            object-position: left top;
+        }
+        
+
+        .invoice-title { 
+            text-align: right; 
+        } 
+ 
+        .invoice-title h1 { 
+            margin: 0; 
+            font-size: 36px; 
+            font-weight: 700; 
+        }
+        
+         .better-call-image {
+            display: block;
+            width: 200px;
+            height: auto;
+            margin-left: -20px;
+            margin-top: -15px;
+        }
+ 
+        .invoice-number { 
+            margin-top: 8px; 
+            color: #666; 
+            font-size: 14px; 
+        } 
+ 
+        .business-info { 
+            font-weight: bold; 
+            text-align: center; 
+            font-size: 21.5px; 
+            margin-top: -35px; 
+            margin-bottom: 35px; 
+  
+        } 
+ 
+        .business-info .separator { 
+            color: #d32f2f; 
+            margin: 0 5px; 
+            font-weight: bold; 
+        } 
+ 
+        /* ========================= 
+           CUSTOMER / DETAILS 
+        ========================= */ 
+ 
+        .details { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 45px; 
+        } 
+ 
+        .details-section { 
+            width: 48%; 
+        } 
+ 
+        .label { 
+            margin-bottom: 8px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 0.08em; 
+        } 
+ 
+        .value { 
+            font-size: 14px; 
+            line-height: 1.6; 
+        } 
+ 
+        .text-right { 
+            text-align: right !important; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT + TOTALS SCALE 
+        ========================= */ 
+ 
+        .treatment-totals-wrapper { 
+            width: 100%; 
+            position: relative; 
+ 
+            /* CHANGE THIS NUMBER TO SCALE 
+               THE TREATMENT + TOTALS SECTION */ 
+ 
+            transform: scale(1.1); 
+            transform-origin: top center; 
+ 
+            /* Compensates for the space that 
+               transform: scale() leaves behind */ 
+ 
+            margin-bottom: -100px; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT BOX 
+        ========================= */ 
+ 
+        .treatment-box { 
+            position: relative; 
+            width: 95%; 
+            height: 680px; 
+            margin: 30px auto; 
+            border: 7px solid #222; 
+            background: white; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT DIVIDER 
+        ========================= */ 
+ 
+        .treatment-divider { 
+            position: absolute; 
+            top: 25%; 
+            left: 0; 
+            width: 100%; 
+            height: 38px; 
+            transform: translateY(-50%); 
+            background: #222; 
+ 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        } 
+ 
+        /* ========================= 
+           TOP TREATMENT CHECKLIST 
+        ========================= */ 
+ 
+        .top-treatment-checklist { 
+            width: 100%; 
+            padding: 5px 30px; 
+            padding-left: 10px; 
+            box-sizing: border-box; 
+        } 
+ 
+        .checklist-row { 
+            display: flex; 
+            align-items: center; 
+            gap: 30px; 
+            min-height: 45px; 
+        } 
+ 
+        .checklist-item { 
+            display: flex; 
+            align-items: center; 
+            white-space: nowrap; 
+            text-transform: uppercase; 
+            font-size: 18px; 
+            font-weight: bold; 
+        } 
+ 
+        /* ========================= 
+           WRAPPER FOR CHECKBOXES 
+        ========================= */ 
+ 
+        .checkbox-wrapper { 
+            width: 24px; 
+            height: 24px; 
+            position: relative; 
+            flex-shrink: 0; 
+        } 
+ 
+        .checkbox-wrapper img { 
+            position: absolute; 
+            object-fit: contain; 
+        } 
+ 
+        .checkbox-wrapper img.checkbox-unchecked,
+        .checkbox-wrapper img[src*="checkbox-unchecked"] {  
+            width: 24px;  
+            height: 24px;  
+        }  
+
+        .checkbox-wrapper img.checkbox-checked,
+        .checkbox-wrapper img[src*="checkbox-checked"] {  
+            width: 52px;  
+            height: 52px;  
+            top: -26px;  
+            left: -14px;  
+        }
+ 
+        /* ========================= 
+           RECOMMENDATIONS DIVIDER 
+        ========================= */ 
+ 
+        .recommendations-divider { 
+            position: absolute; 
+            bottom: 70px; 
+            left: 0; 
+            width: 100%; 
+            height: 38px; 
+            background: #222; 
+ 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        } 
+ 
+        /* ========================= 
+           SECTION TITLE 
+        ========================= */ 
+ 
+        .section-title { 
+            color: white; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT SECTION 
+        ========================= */ 
+ 
+        .treatment-section { 
+            position: relative; 
+            width: 100%; 
+            border-top: 4px solid #222; 
+            border-bottom: 0px solid #222; 
+            padding-top: 40px; 
+            padding-bottom: 20px; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT CONTENT 
+        ========================= */ 
+ 
+        .treatment-content { 
+            display: flex; 
+            gap: 35px; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT COLUMNS 
+        ========================= */ 
+ 
+        .treatment-column { 
+            flex: 1; 
+            margin-left: 20px; 
+            margin-top: 8px; 
+        } 
+ 
+        /* ========================= 
+           TREATMENT ROW 
+        ========================= */ 
+ 
+        .treatment-row { 
+            display: flex; 
+            align-items: baseline; 
+            min-height: 40px; 
+            font-size: 12px; 
+            font-weight: bold; 
+        } 
+ 
+        .measurement { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; 
+            margin-left: 40px; 
+        } 
+ 
+        .label-left-column-percent { 
+            margin-left: 10px; 
+        } 
+ 
+        /* ========================= 
+           PRODUCT 
+        ========================= */ 
+ 
+        .product { 
+            white-space: nowrap; 
+            min-width: 155px; 
+        } 
+ 
+        .product.secondary { 
+            margin-left: 15px; 
+            min-width: auto; 
+        } 
+ 
+        /* ========================= 
+           RIGHT COLUMN PRODUCT OVERRIDE 
+        ========================= */ 
+ 
+        .treatment-column:nth-child(2) .product { 
+            min-width: auto; 
+        } 
+ 
+        /* ========================= 
+           RIGHT COLUMN LABEL SPACING 
+        ========================= */ 
+ 
+        .treatment-column:nth-child(2) .label { 
+            margin-left: 4px; 
+        } 
+ 
+        /* ========================= 
+           LABEL 
+        ========================= */ 
+ 
+        .label-left-column { 
+            white-space: nowrap; 
+            margin-left: -10px; 
+            padding-bottom: -8px; 
+        } 
+ 
+        /* ========================= 
+           LINES 
+        ========================= */ 
+ 
+        .line { 
+            display: inline-block; 
+            position: relative;
+            border-bottom: 1px solid #222; 
+            width: 55px; 
+            margin-left: 20px; 
+        } 
+
+        .line-value {
+            position: absolute;
+            left: 0;
+            bottom: 2px;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 12px;
+            line-height: 12px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+ 
+        /* ========================= 
+           FINE CONTROLS FOR MIDDLE THIRD RIGHT COLUMN 
+        ========================= */ 
+ 
+        .gentrol-line { 
+            margin-left: 2px; 
+        } 
+ 
+        .treatment-column:nth-child(2) .gentrol-ml { 
+            margin-left: 20px; 
+        } 
+ 
+        .alpine-d { 
+            margin-left: 15px; 
+        }
+
+        
+        .spot-crack-value {
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        } 
+ 
+        /* ========================= 
+           BAIT STATIONS FINE CONTROLS 
+        ========================= */ 
+ 
+        .treatment-column:nth-child(2) .bait-small { 
+            margin-left: 8px; 
+        } 
+ 
+        .bait-small-line { 
+            margin-left: 5px; 
+        } 
+ 
+        .treatment-column:nth-child(2) .bait-large { 
+            margin-left: 8px; 
+        } 
+ 
+        .bait-large-line { 
+            margin-left: 5px; 
+        } 
+ 
+        .line.wide { 
+            width: 105px; 
+        } 
+
+        
+        /* =========================
+        Due on Receipt and and interest after 30 days PAYMENT TERMS
+        ========================= */
+
+        .payment-terms {
+            position: relative;
+            top: -24px;
+            margin-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .due-on-receipt {
+            color: #d32f2f;
+            font-size: 12x;
+            font-weight: 900;
+            
+        }
+
+        .interest-term {
+            color: #222;
+            font-weight: 700;
+
+        }
+ 
+        /* ========================= 
+           TOTALS 
+        ========================= */ 
+ 
+        .totals { 
+            width: 300px; 
+            margin-top: -50px;
+            margin-left: auto; 
+        } 
+ 
+        .total-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 8px 0; 
+            font-size: 14px; 
+            margin-right: 20px;
+        } 
+ 
+        .grand-total { 
+            margin-top: 8px; 
+            padding-top: 15px; 
+            border-top: 2px solid #222; 
+            font-size: 20px; 
+            font-weight: bold; 
+        } 
+ 
+        /* ========================= 
+           FOOTER 
+        ========================= */ 
+ 
+        .footer { 
+            margin-top: 80px; 
+            padding-top: 20px; 
+            border-top: none; 
+            font-size: 12px; 
+            color: #777; 
+        }
+        
+        .thank-you-image {
+            display: block;
+            width: 200px;
+            height: auto;
+            margin-left: -20px;
+        }
+
+
+        .recommendations-content { 
+            position: absolute; 
+
+            left: 15px;
+            right: 15px;
+            bottom: 60px; 
+
+            height: 70px; 
+            padding: 8px 10px; 
+
+            font-size: 12px; 
+            line-height: 1.35; 
+            font-weight: bold; 
+
+            overflow: hidden; 
+
+            transform: translateY(40px); 
+        }
+
+        .recommendation { 
+            display: block; 
+            width: 100%;
+            max-width: 100%;
+
+            margin: 0; 
+            padding: 0; 
+            text-indent: 0; 
+
+            box-sizing: border-box;
+
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+
+        
+        /* ========================= 
+           PRINT 
+        ========================= */ 
+
+        @media print {
+
+            @page {
+                size: Legal portrait;
+                margin: 0;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                width: 8.5in;
+                overflow: hidden;
+            }
+
+            .invoice {
+                width: 8.5in;
+                height: 13.95in;
+                overflow: hidden;
+
+                page-break-after: avoid;
+                break-after: avoid-page;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .treatment-divider,
+            .recommendations-divider {
+                background: #222 !important;
+                background-color: #222 !important;
+            }
+
+
+        } 
+ 
+    </style>
+
+            </head>
+            <body>
+                <div class="invoice"> 
+ 
+        <!-- HEADER --> 
+ 
+        <div class="header"> 
+ 
+            <div class="company-logo">
+                <img src="/pest_control/static/src/img/Professional-Pest-Control-WIDE-LOGO-svg.svg" alt="Professional Pest Control"/>
+            </div>
+        
+            <img src="/pest_control/static/src/img/better-call-rolly-svg.svg" alt="Thank you" class="better-call-image"/>
+ 
+        </div> 
+ 
+ 
+        <div class="business-info"> 
+ 
+            <span>License No. 53329</span> 
+ 
+            <span class="separator">•</span> 
+ 
+            <span>302 Olive St.</span> 
+ 
+            <span class="separator">•</span> 
+ 
+            Atlantic, IA 50022 
+ 
+            <span class="separator">•</span> 
+ 
+            <span>712-555-1234</span> 
+ 
+        </div> 
+ 
+ 
+        <!-- CUSTOMER / INVOICE DETAILS --> 
+ 
+        <div class="details"> 
+ 
+            <div class="details-section"> 
+ 
+                <div class="label-header-2"> 
+                    Bill To 
+                </div> 
+ 
+                <div class="value"> 
+                    <strong><t t-esc="billing_name"/></strong><br/> 
+                    <t t-esc="billing_street"/><br/>
+                    <t t-esc="billing_city_state_zip"/><br/>
+                    <t t-esc="billing_country"/>
+                </div> 
+ 
+            </div> 
+ 
+ 
+            <div class="details-section"> 
+ 
+                <div class="label-header-2"> 
+                    Invoice No. <t t-esc="invoice_number"/>
+                </div> 
+ 
+                <div class="value"> 
+                    Invoice Date: <t t-esc="invoice_date_str"/><br/> 
+                </div> 
+
+                <div class="value"> 
+                    Pest Control Service - <t t-esc="job_type_label"/><br/> 
+                </div> 
+
+                
+
+                <div class="value"> 
+                    Service Address: <t t-esc="service_address_str"/><br/> 
+                </div> 
+
+                <div class="value"> 
+                    Service Date: <t t-esc="service_date_str"/><br/> 
+                </div> 
+ 
+ 
+            </div> 
+ 
+        </div> 
+ 
+ 
+        <!-- ========================================= 
+             TREATMENT + TOTALS 
+             ONLY THIS SECTION IS SCALED 
+             ========================================= --> 
+ 
+        <div class="treatment-totals-wrapper"> 
+ 
+            <div class="treatment-box"> 
+ 
+                <div class="top-treatment-checklist"> 
+ 
+                    <!-- ROW 1 --> 
+ 
+                    <div class="checklist-row"> 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_inside else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_inside else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Inside</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_outside else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_outside else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Outside</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_wind else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_wind else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Wind</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_general_extermination else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_general_extermination else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>General Extermination</span> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+                    <!-- ROW 2 --> 
+ 
+                    <div class="checklist-row"> 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_roaches else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_roaches else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Roaches</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_ants else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_ants else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Ants</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_rats else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_rats else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Rats</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_mice else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_mice else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Mice</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_fleas else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_fleas else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Fleas</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_bats else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_bats else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Bats</span> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+ 
+                    <!-- ROW 3 --> 
+ 
+                    <div class="checklist-row"> 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_bed_bugs else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_bed_bugs else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Bed Bugs</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_termite_inspections else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_termite_inspections else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Termite Inspections</span> 
+ 
+                        </div> 
+ 
+ 
+                        <div class="checklist-item"> 
+ 
+                            <span class="checkbox-wrapper">
+                                <img t-att-src="'/pest_control/static/src/img/checkbox-checked.svg' if o.job_other else '/pest_control/static/src/img/checkbox-unchecked.svg'" t-att-class="'checkbox-checked' if o.job_other else 'checkbox-unchecked'" alt=""/>
+                             
+                            </span> 
+ 
+                            <span>Other</span> 
+ 
+                        </div> 
+ 
+                    </div> 
+ 
+                </div> 
+ 
+ 
+                <div class="treatment-divider"> 
+ 
+                    <span class="section-title"> 
+                        Treatment 
+                    </span> 
+ 
+                </div> 
+ 
+ 
+                <!-- TREATMENT SECTION --> 
+ 
+                <div class="treatment-section"> 
+ 
+                    <div class="section-title"/> 
+ 
+                    <div class="treatment-content"> 
+ 
+ 
+                        <!-- LEFT COLUMN --> 
+ 
+                        <div class="treatment-column"> 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    MASTERLINE 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.masterline_used"><t t-esc="'%g' % o.masterline_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.masterline_used"><t t-esc="'%g' % o.masterline_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    CROSSFIRE 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.crossfire_used"><t t-esc="'%g' % o.crossfire_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.crossfire_used"><t t-esc="'%g' % o.crossfire_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    SUSPEND/SUSPEND POLY 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.suspend_used"><t t-esc="'%g' % o.suspend_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.suspend_used"><t t-esc="'%g' % o.suspend_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    TEMPRID 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.temprid_used"><t t-esc="'%g' % o.temprid_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.temprid_used"><t t-esc="'%g' % o.temprid_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    ZENPROX/ALPINE 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.zenprox_alpine_used"><t t-esc="'%g' % o.zenprox_alpine_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.zenprox_alpine_used"><t t-esc="'%g' % o.zenprox_alpine_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    TERMIDOR HE/SC 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.termidor_he_sc_used"><t t-esc="'%g' % o.termidor_he_sc_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.termidor_he_sc_used"><t t-esc="'%g' % o.termidor_he_sc_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    Ny GUARD IGR 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.nyguard_igr_used"><t t-esc="'%g' % o.nyguard_igr_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.nyguard_igr_used"><t t-esc="'%g' % o.nyguard_igr_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    DEMAND 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.demand_used"><t t-esc="'%g' % o.demand_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.demand_used"><t t-esc="'%g' % o.demand_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    SPECTRE PS 
+                                </span> 
+ 
+                                <div class="measurement"> 
+ 
+                                    <span class="label-left-column"> 
+                                        GAL 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.spectre_ps_used"><t t-esc="'%g' % o.spectre_ps_gallons"/></t></span></span> 
+ 
+                                    <span class="label-left-column-percent"> 
+                                        % 
+                                    </span> 
+ 
+                                    <span class="line"><span class="line-value"><t t-if="o.spectre_ps_used"><t t-esc="'%g' % o.spectre_ps_percent"/></t></span></span> 
+ 
+                                </div> 
+ 
+                            </div> 
+ 
+                        </div> 
+ 
+ 
+                        <!-- RIGHT COLUMN --> 
+ 
+                        <div class="treatment-column"> 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    GENTROL 
+                                </span> 
+ 
+                                <span class="label gentrol-ml"> 
+                                    ML 
+                                </span> 
+ 
+                                <span class="line gentrol-line"><span class="line-value"><t t-if="o.gentrol_used"><t t-esc="'%g' % o.gentrol_ml"/></t></span></span> 
+ 
+                                <span class="product alpine-d"> 
+                                    ALPINE D 
+                                </span> 
+ 
+                                <span class="line"><span class="line-value"><t t-if="o.alpine_d_used"><t t-esc="'%g' % o.alpine_d_amount"/></t></span></span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    BAIT STATIONS 
+                                </span> 
+ 
+                                <span class="label bait-small"> 
+                                    SMALL 
+                                </span> 
+ 
+                                <span class="line bait-small-line"><span class="line-value"><t t-if="o.small_bait_stations_used"><t t-esc="o.small_bait_stations_used"/></t></span></span> 
+ 
+                                <span class="label bait-large"> 
+                                    LARGE 
+                                </span> 
+ 
+                                <span class="line bait-large-line"><span class="line-value"><t t-if="o.large_bait_stations_used"><t t-esc="o.large_bait_stations_used"/></t></span></span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    RESOLVE 
+                                </span> 
+ 
+                                <span class="line wide"><span class="line-value"><t t-if="o.resolve_used"><t t-esc="'%g' % o.resolve_oz"/></t></span></span> 
+ 
+                                <span class="label"> 
+                                    Oz. 
+                                </span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    FASTRAC 
+                                </span> 
+ 
+                                <span class="line wide"><span class="line-value"><t t-if="o.fastrac_used"><t t-esc="'%g' % o.fastrac_oz"/></t></span></span> 
+ 
+                                <span class="label"> 
+                                    Oz. 
+                                </span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    APPREHEND 
+                                </span> 
+ 
+                                <span class="line wide"><span class="line-value"><t t-if="o.apprehend_used"><t t-esc="'%g' % o.apprehend_oz"/></t></span></span> 
+ 
+                                <span class="label"> 
+                                    Oz. 
+                                </span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    WEATHERBLOX 
+                                </span> 
+ 
+                                <span class="line wide"><span class="line-value"><t t-if="o.weatherblox_used"><t t-esc="'%g' % o.weatherblox_oz"/></t></span></span> 
+ 
+                                <span class="label"> 
+                                    Oz. 
+                                </span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row"> 
+ 
+                                <span class="product"> 
+                                    OPTIGUARD/QUANTUM 
+                                </span> 
+ 
+                                <span class="line wide"><span class="line-value"><t t-if="o.optiguard_quantum_used"><t t-esc="'%g' % o.optiguard_quantum_oz"/></t></span></span> 
+ 
+                                <span class="label"> 
+                                    Oz. 
+                                </span> 
+ 
+                            </div> 
+ 
+ 
+                            <div class="treatment-row">
+
+                                <span class="product">
+                                    SPOT-CRACK &amp; CREVICE
+                                </span>
+
+                                <span class="line wide">
+                                    <span class="line-value spot-crack-value">
+                                        <t t-if="o.spot_crack_crevice">
+                                            <t t-esc="o.spot_crack_crevice"/>
+                                        </t>
+                                    </span>
+                                </span>
+
+                            </div>
+
+
+                        </div> 
+ 
+                    </div> 
+ 
+                </div> 
+
+ 
+                <!-- BOTTOM DIVIDER -->
+                <div class="recommendations-divider">
+
+                    <span class="section-title">
+                        Recommendations
+                    </span>
+
+                </div>
+
+                <!-- RECOMMENDATIONS TEXT -->
+                <div class="recommendations-content">
+                    <span class="recommendation">
+                        <t t-if="o.reccomendations">
+                            <t t-esc="o.reccomendations"/>
+                        </t>
+                    </span>
+                </div>
+
+
+            </div>
+            
+            <div class="payment-terms">
+
+                <div class="due-on-receipt">
+                    DUE ON RECEIPT
+                </div>
+
+                <div class="interest-term">
+                    1.5% INTEREST PER MONTH AFTER 30 DAYS
+                </div>
+
+            </div>
+            
+ 
+            <!-- TOTALS --> 
+ 
+            <div class="totals"> 
+ 
+                <div class="total-row"> 
+ 
+                    <span> 
+                        AMOUNT 
+                    </span> 
+ 
+                    <span> 
+                        <t t-esc="'$%.2f' % ((o.price or 0.0) + (o.extra or 0.0))"/> 
+                    </span> 
+ 
+                </div> 
+ 
+ 
+                <div class="total-row"> 
+ 
+                    <span> 
+                        SALES TAX 
+                    </span> 
+ 
+                    <span> 
+                        <t t-esc="'$%.2f' % (o.tax or 0.0)"/> 
+                    </span> 
+ 
+                </div> 
+ 
+ 
+                <div class="total-row grand-total"> 
+ 
+                    <span> 
+                        TOTAL 
+                    </span> 
+ 
+                    <span> 
+                        <t t-esc="'$%.2f' % (o.total or 0.0)"/> 
+                    </span> 
+ 
+                </div> 
+ 
+            </div> 
+ 
+        </div> 
+ 
+ 
+        <!-- FOOTER --> 
+ 
+        <div class="footer">
+            <img src="/pest_control/static/src/img/thank-you-svg.svg" alt="Thank you" class="thank-you-image"/>
+        </div>
+    
+    </div>
+                
+            </body>
+        </html>
+    </template>
+</odoo>
